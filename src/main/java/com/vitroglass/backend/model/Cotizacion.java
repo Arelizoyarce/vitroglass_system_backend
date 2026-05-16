@@ -1,7 +1,10 @@
 package com.vitroglass.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "cotizacion")
@@ -32,6 +35,10 @@ public class Cotizacion {
     private String estado;
 
     private String observaciones;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "cotizacion")
+    private List<DetalleCotizacion> detalleCotizaciones;
 
     public Cotizacion() {
     }
@@ -106,5 +113,13 @@ public class Cotizacion {
 
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
+    }
+
+    public List<DetalleCotizacion> getDetalleCotizaciones() {
+        return detalleCotizaciones;
+    }
+
+    public void setDetalleCotizaciones(List<DetalleCotizacion> detalleCotizaciones) {
+        this.detalleCotizaciones = detalleCotizaciones;
     }
 }

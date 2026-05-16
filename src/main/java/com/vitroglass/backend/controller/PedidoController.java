@@ -1,7 +1,9 @@
 package com.vitroglass.backend.controller;
 
+import com.vitroglass.backend.dto.DashboardItemDTO;
 import com.vitroglass.backend.model.Pedido;
 import com.vitroglass.backend.service.PedidoService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,5 +30,10 @@ public class PedidoController {
     @GetMapping("/estado/{estado}")
     public List<Pedido> listarPorEstado(@PathVariable String estado) {
         return pedidoService.listarPorEstado(estado);
+    }
+
+    @GetMapping("/dashboard")
+    public List<DashboardItemDTO> dashboard() {
+        return pedidoService.listarDashboard();
     }
 }

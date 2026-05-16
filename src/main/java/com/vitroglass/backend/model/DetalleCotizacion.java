@@ -1,5 +1,6 @@
 package com.vitroglass.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -11,6 +12,7 @@ public class DetalleCotizacion {
     @Column(name = "id_detalle_cotizacion")
     private Integer idDetalleCotizacion;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "id_cotizacion")
     private Cotizacion cotizacion;
