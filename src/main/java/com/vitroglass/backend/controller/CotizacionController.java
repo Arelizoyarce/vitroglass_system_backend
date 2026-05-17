@@ -3,10 +3,12 @@ package com.vitroglass.backend.controller;
 import com.vitroglass.backend.dto.CotizacionRequestDTO;
 import com.vitroglass.backend.model.Cotizacion;
 import com.vitroglass.backend.service.CotizacionService;
+import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/cotizaciones")
@@ -19,14 +21,6 @@ public class CotizacionController {
     @PostMapping
     public Cotizacion crear(@RequestBody CotizacionRequestDTO dto) {
         return cotizacionService.crear(dto);
-    }
-
-    @PutMapping("/{id}")
-    public Cotizacion actualizarEstado(
-            @PathVariable Integer id,
-            @RequestBody Cotizacion cotizacion
-    ) {
-        return cotizacionService.actualizarEstado(id, cotizacion.getEstado());
     }
 
     @GetMapping

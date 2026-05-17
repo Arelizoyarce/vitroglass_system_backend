@@ -28,6 +28,9 @@ public class CotizacionService {
 
     @Autowired
     private TipoVidrioRepository tipoVidrioRepository;
+    
+    @Autowired
+    private PedidoRepository pedidoRepository;
 
     /* =========================
         CREAR COTIZACION
@@ -122,16 +125,55 @@ public class CotizacionService {
         return cotizacionRepository.findByEstado(estado);
     }
 
-    /* =========================
-        ACTUALIZAR ESTADO
-    ========================= */
-    public Cotizacion actualizarEstado(Integer id, String estado) {
+@Transactional
+public Cotizacion actualizarEstado(
+        Integer id,
+        String estado,
+        LocalDateTime fechaEntrega
+) {
 
-        Cotizacion cotizacion = cotizacionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cotización no encontrada"));
+    Cotizacion cotizacion = cotizacionRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Cotización no encontrada"));
 
-        cotizacion.setEstado(estado);
+    cotizacion.setEstado(estado);
 
-        return cotizacionRepository.save(cotizacion);
+    Cotizacion updated = cotizacionRepository.save(cotizacion);
+
+    /* =====================================
+       SOLO CUANDO PASA A EN PROCESO
+    ===================================== */
+    if ("EN PROCESO".equalsIgnoreCase(estado)) {
+
+        boolean existe = pedidoRepository.findAll()
+                .stream()
+                .anyMatch(p ->
+                        p.getCotizacion()
+                         .getIdCotizacion()
+                         .equals(updated.getIdCotizacion())
+                );
+
+        if (!existe) {
+
+            if (fechaEntrega == null) {
+                throw new RuntimeException("Fecha de entrega obligatoria para crear pedido");
+            }
+
+            Pedido pedido = new Pedido();
+
+            pedido.setCotizacion(updated);
+            pedido.setFechaPedido(LocalDateTime.now());
+            pedido.setFechaEntrega(fechaEntrega);
+            pedido.setTotal(updated.getTotal());
+
+            EstadoPedido estadoPedido = new EstadoPedido();
+            estadoPedido.setIdEstadoPedido(1); // PENDIENTE
+
+            pedido.setEstadoPedido(estadoPedido);
+
+            pedidoRepository.save(pedido);
+        }
     }
+
+    return updated;
+}
 }
