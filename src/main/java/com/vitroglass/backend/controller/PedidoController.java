@@ -3,10 +3,10 @@ package com.vitroglass.backend.controller;
 import com.vitroglass.backend.dto.DashboardItemDTO;
 import com.vitroglass.backend.model.Pedido;
 import com.vitroglass.backend.service.PedidoService;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -32,8 +32,17 @@ public class PedidoController {
         return pedidoService.listarPorEstado(estado);
     }
 
+    // Vendedor: solo ve sus cotizaciones
     @GetMapping("/dashboard")
-    public List<DashboardItemDTO> dashboard() {
+    public List<DashboardItemDTO> dashboard(Authentication authentication) {
+        String correo = authentication.getName();
+        return pedidoService.listarDashboard(correo);
+    }
+
+    // Admin: ve todas las cotizaciones
+    @GetMapping("/admin/dashboard")
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<DashboardItemDTO> adminDashboard() {
         return pedidoService.listarDashboard();
     }
 }

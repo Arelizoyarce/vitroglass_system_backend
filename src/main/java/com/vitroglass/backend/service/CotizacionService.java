@@ -40,20 +40,15 @@ public class CotizacionService {
 
         Cliente cliente = clienteRepository.findById(dto.getIdCliente())
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
-
         Usuario usuario = usuarioRepository.findById(dto.getIdUsuario())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
         Cotizacion cotizacion = new Cotizacion();
         cotizacion.setCliente(cliente);
         cotizacion.setUsuario(usuario);
         cotizacion.setFechaCotizacion(LocalDateTime.now());
         cotizacion.setEstado(dto.getEstado() != null ? dto.getEstado() : "COTIZADO");
-
         Cotizacion savedCotizacion = cotizacionRepository.save(cotizacion);
-
         double subtotalTotal = 0;
-
         for (DetalleRequestDTO d : dto.getDetalles()) {
 
             TipoVidrio tipoVidrio = tipoVidrioRepository.findById(d.getIdTipoVidrio())
@@ -139,9 +134,6 @@ public Cotizacion actualizarEstado(
 
     Cotizacion updated = cotizacionRepository.save(cotizacion);
 
-    /* =====================================
-       SOLO CUANDO PASA A EN PROCESO
-    ===================================== */
     if ("EN PROCESO".equalsIgnoreCase(estado)) {
 
         boolean existe = pedidoRepository.findAll()

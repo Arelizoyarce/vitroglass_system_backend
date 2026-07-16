@@ -1,5 +1,6 @@
 package com.vitroglass.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -15,11 +16,13 @@ public class Usuario {
     private String nombres;
 
     private String apellidos;
+    
+    private String dni;
 
     @Column(name = "correo_electronico")
     private String correoElectronico;
 
-    private String contrasena;
+private String contrasena;
 
     private String rol;
 
@@ -94,4 +97,12 @@ public class Usuario {
     public void setFechaCreacion(LocalDateTime fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
+    
+    public String getDni() {
+    return dni;
+}
+
+public void setDni(String dni) {
+    this.dni = dni;
+}
 }

@@ -13,6 +13,8 @@ public interface CotizacionRepository extends JpaRepository<Cotizacion, Integer>
     List<Cotizacion> findByEstado(String estado);
 
     List<Cotizacion> findAllByOrderByFechaCotizacionDesc();
+    
+    List<Cotizacion> findByUsuarioCorreoElectronicoOrderByFechaCotizacionDesc(String correo);
 
     @Query("""
         SELECT c FROM Cotizacion c
@@ -21,4 +23,5 @@ public interface CotizacionRepository extends JpaRepository<Cotizacion, Integer>
         WHERE c.idCotizacion = :id
     """)
     Optional<Cotizacion> findByIdCompleto(@Param("id") Integer id);
+    
 }
